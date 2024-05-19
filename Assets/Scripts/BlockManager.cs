@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-
 public class BlockManager : MonoBehaviour
 {
     [SerializeField] private List<Block> blocks;
@@ -15,16 +13,26 @@ public class BlockManager : MonoBehaviour
     {
         instance = this;
     }
+
     void Start()
     {
-        SetRandomBlock();
+		Spawn ();
     }
-    public static BlockManager Instance => instance;
-    public GameObject Spawn(Vector3 position)
+
+	public static BlockManager Instance { get { return instance; } }
+
+	private void Spawn()
     {
-        GameObject obj = Instantiate(prefab, position, Quaternion.identity);
-        blocks.Add(obj.GetComponent<Block>());
-        return obj;
+		if (NodeManager.Instance.Nodes.Count == 0) {
+			Invoke (nameof(Spawn), 0.5f);
+			return;
+		}
+		foreach (Node node in NodeManager.Instance.Nodes) {
+			GameObject obj = Instantiate (prefab, node.position, Quaternion.identity);
+			blocks.Add (obj.GetComponent<Block> ());
+		}
+		CheckIndexBlock ();
+		SetRandomBlock ();
     }
 
     void CheckIndexBlock()
@@ -45,11 +53,18 @@ public class BlockManager : MonoBehaviour
             for (int index = 0; index < indexDone; index++)
             {
                 int ranBlock = UnityEngine.Random.Range(0, blocks.Count);
-                Block block = blocks[ranBlock];
+				Block block;
+				try
+				{
+                	 block = blocks[ranBlock];
+				}catch{
+					return;
+				}
                 block.ID = ranImage;
-                block.SetIcon(dataImage.sprites[ranImage]);
+				block.Icone = dataImage.sprites[ranImage];
                 blocks.Remove(block);
             }
         }
     }
+
 }

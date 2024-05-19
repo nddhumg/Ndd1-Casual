@@ -28,13 +28,27 @@ public class HolderManager : MonoBehaviour
             holders.Add(tf);
         }
     }
-    public List<Transform> Holders => holders;
-    public int CountHolderCurrent => countHolderCurrent;
-    public static HolderManager Instance => instance;
+
+	public static HolderManager Instance{
+		get 
+		{
+			return instance;
+		}
+	}
+
+	public List<Transform> Holders{ get 
+		{ return holders; } 
+	}
+
+	public int CountHolderCurrent{ 
+		get { return countHolderCurrent; } 
+	}
+		
     public void AddCountHolderCurrent()
     {
         ++countHolderCurrent;
     }
+
     public void AddBlock(Block block)
     {
         if (blocksHolder.Count >= countHolder)
@@ -42,8 +56,9 @@ public class HolderManager : MonoBehaviour
             return;
         }
         blocksHolder.Add(block);
-        BlockPile();
+		CheckFinish ();
     }
+
     public void CheckFinish()
     {
         if (blocksHolder.Count < 3)
@@ -91,7 +106,7 @@ public class HolderManager : MonoBehaviour
         int temp = 0;
         foreach (Block block in blocksHolder)
         {
-            block.MoveToHolder(holders[temp].position);
+	        block.MoveToHolder(holders[temp].position);
             ++temp;
         }
     }

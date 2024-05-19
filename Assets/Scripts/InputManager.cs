@@ -6,12 +6,12 @@ public class InputManager : MonoBehaviour
 {
     void Update()
     {
-        Click();
+		if (Input.GetMouseButtonDown (0)) {
+			Click ();
+		}
     }
     void Click()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
             Vector3 mousePosition = Input.mousePosition;
 
             // Tạo ray từ vị trí chuột trên màn hình
@@ -34,6 +34,6 @@ public class InputManager : MonoBehaviour
                     return;
                 block.Click();
             }
-        }
+    
     }
 }

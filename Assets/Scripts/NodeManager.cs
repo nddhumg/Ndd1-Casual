@@ -11,7 +11,7 @@ public class NodeManager : MonoBehaviour
     [SerializeField] private Vector2 startingPosition;
     [SerializeField] private List<Node> nodes;
     private static NodeManager instance;
-    public static NodeManager Instance => instance;
+
     private void Awake()
     {
         if (instance == null)
@@ -24,10 +24,20 @@ public class NodeManager : MonoBehaviour
         }
 
     }
-    private void Start()
-    {
-        GenerateBlock();
-    }
+
+	private void Start()
+	{
+		SpawnNode();
+	}
+
+	public static NodeManager Instance { 
+		get { return instance; } 
+	}
+
+	public List<Node> Nodes{
+		get{ return nodes;}
+	}
+
     public int GetIndexByMatrix(int row, int colum)
     {
         if (row == 0 || colum == 0)
@@ -40,53 +50,29 @@ public class NodeManager : MonoBehaviour
         }
         return colum == 1 ? row - 1 : (colum - 1) * this.row + row - 1;
     }
+
     public int GetIndexByMatrix(Node node)
     {
         int row = node.row;
         int colum = node.colum;
         return GetIndexByMatrix(row, colum);
     }
+
     void SpawnNode()
     {
-        Vector2 temp = startingPosition;
+        Vector2 positionSpawn = startingPosition;
         for (int columCurrent = 1; columCurrent <= colum; columCurrent++)
         {
             for (int rowCurrent = 1; rowCurrent <= row; rowCurrent++)
             {
-                nodes.Add(new Node(temp, rowCurrent, columCurrent));
-                temp.y -= distance;
+                nodes.Add(new Node(positionSpawn, rowCurrent, columCurrent));
+                positionSpawn.y -= distance;
             }
-            temp.y = startingPosition.y;
-            temp.x += distance;
-        }
-        SetUpArrayRelatedNode();
-    }
-    private void GenerateBlock()
-    {
-        SpawnNode();
-        foreach (Node node in nodes)
-        {
-            if (node.isBlock == true)
-            {
-                node.SetRelatedNode();
-            }
+            positionSpawn.y = startingPosition.y;
+            positionSpawn.x += distance;
         }
     }
-    private void SetUpArrayRelatedNode()
-    {
-        foreach (Node node in nodes)
-        {
 
-            int row = node.row;
-            int colum = node.colum;
-            int[] rowRelateNode = { -1, -1, -1, 0, 1, 1, 1, 0 };
-            int[] columRelateNode = { -1, 0, 1, 1, 1, 0, -1, -1 };
-            for (int index = 0; index < node.arrayRelatedNode.Length; index++)
-            {
-                node.arrayRelatedNode[index] = GetNodeByIndex(GetIndexByMatrix(row + rowRelateNode[index], colum + columRelateNode[index]));
-            }
-        }
-    }
     private Node GetNodeByIndex(int index)
     {
         try
