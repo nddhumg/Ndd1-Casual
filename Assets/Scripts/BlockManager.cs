@@ -7,6 +7,7 @@ public class BlockManager : MonoBehaviour
     [SerializeField] private SOBlockImages dataImage;
     [SerializeField] private int indexDone = 3;
     [SerializeField] private GameObject prefab;
+	[SerializeField] private Transform parentBlock;
     private static BlockManager instance;
 
     void Awake()
@@ -28,7 +29,8 @@ public class BlockManager : MonoBehaviour
 			return;
 		}
 		foreach (Node node in NodeManager.Instance.Nodes) {
-			GameObject obj = Instantiate (prefab, node.position, Quaternion.identity);
+			GameObject obj = Instantiate (prefab);
+			obj.transform.parent = parentBlock;
 			blocks.Add (obj.GetComponent<Block> ());
 		}
 		CheckIndexBlock ();
@@ -61,7 +63,7 @@ public class BlockManager : MonoBehaviour
 					return;
 				}
                 block.ID = ranImage;
-				block.Icone = dataImage.sprites[ranImage];
+				block.SetIcone (dataImage.sprites [ranImage]);
                 blocks.Remove(block);
             }
         }

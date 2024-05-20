@@ -310,7 +310,7 @@ MonoBehaviour:
   boxCollider: {fileID: 65782273478421342}
   colorWhenCovered: {r: 0, g: 0, b: 0, a: 0}
   id: 0
-  speedMove: 1
+  speedMove: 0.8
   node:
     row: 0
     colum: 0
